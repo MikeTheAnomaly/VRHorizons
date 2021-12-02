@@ -5,6 +5,7 @@ public class Puzzle : MonoBehaviour
 {
     public bool Completed { get; protected set; }
     public UnityEvent OnCompleted = new UnityEvent();
+    public UnityEvent OnFailed = new UnityEvent();
 
     /// <summary>
     /// Completes the puzzle and invokes the on complete;
@@ -12,6 +13,11 @@ public class Puzzle : MonoBehaviour
     protected virtual void Complete()
     {
         OnCompleted.Invoke();
+    }
+
+    protected virtual void Fail()
+    {
+        OnFailed.Invoke();
     }
 
     /// <summary>

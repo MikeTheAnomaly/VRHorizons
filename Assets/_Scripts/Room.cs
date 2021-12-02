@@ -26,6 +26,11 @@ public class Room : MonoBehaviour
                 completedPuzzles++;
                 CheckRoomStatus();
             });
+
+            puzzle.OnFailed.AddListener(() =>
+            {
+                ActivateTrap();
+            });
         }
     }
 
