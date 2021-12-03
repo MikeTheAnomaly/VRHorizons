@@ -13,6 +13,7 @@ public class Puzzle : MonoBehaviour
     protected virtual void Complete()
     {
         OnCompleted.Invoke();
+        Completed = true;
     }
 
     protected virtual void Fail()

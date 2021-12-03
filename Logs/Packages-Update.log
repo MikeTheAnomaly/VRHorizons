@@ -45,3 +45,14 @@ The following packages were updated:
   com.unity.xr.management from version 4.0.1 to 4.0.7
   com.unity.xr.oculus from version 1.8.1 to 1.10.0
   com.unity.xr.windowsmr from version 4.4.1 to 4.5.0
+
+=== Thu Dec  2 22:15:45 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.collab-proxy from version 1.7.1 to 1.15.1
+  com.unity.test-framework from version 1.1.27 to 1.1.29
+  com.unity.xr.oculus from version 1.10.0 to 1.11.0
+  com.unity.xr.windowsmr from version 4.5.0 to 4.6.0

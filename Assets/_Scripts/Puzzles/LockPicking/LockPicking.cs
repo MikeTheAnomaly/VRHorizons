@@ -28,7 +28,10 @@ public class LockPicking : Puzzle
             {
                 pin.OnHit.AddListener(() =>
                 {
-                    base.Fail();
+                    if (!Completed)
+                    {
+                        base.Fail();
+                    }
                 });
 
             }
@@ -38,6 +41,7 @@ public class LockPicking : Puzzle
     public void HitPin(LockPin pin)
     {
         currentCorrect++;
+        CheckStatus();
     }
 
     public void CheckStatus()
