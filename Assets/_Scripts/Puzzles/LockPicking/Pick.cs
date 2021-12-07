@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Pick : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionStay(Collision other)
     {
         if(other.gameObject.tag == "LockPickingPin")
         {
-            other.GetComponent<LockPin>().HitPin();
+            other.gameObject.GetComponent<LockPin>().HitPinUpdate();
         }
     }
 }

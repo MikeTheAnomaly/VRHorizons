@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 61559352}
   - component: {fileID: 61559351}
   - component: {fileID: 61559350}
+  - component: {fileID: 61559355}
   m_Layer: 0
   m_Name: pin (2)
   m_TagString: LockPickingPin
@@ -156,7 +157,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AlarmPin: 0
-  OnHit:
+  hasBeenHit: 0
+  maxHeight: 1
+  OnHitUpdate:
     m_PersistentCalls:
       m_Calls: []
 --- !u!65 &61559351
@@ -167,7 +170,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 61559349}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -235,6 +238,22 @@ Transform:
   m_Father: {fileID: 920842305}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &61559355
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 61559349}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &331411619
 GameObject:
   m_ObjectHideFlags: 0
@@ -508,7 +527,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 490137805}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.063, y: 0.89202, z: 2.311}
+  m_LocalPosition: {x: 3.239, y: 0.908, z: 1.399}
   m_LocalScale: {x: 0.21052, y: 0.21052, z: 0.21052}
   m_Children: []
   m_Father: {fileID: 854547847}
@@ -543,6 +562,7 @@ GameObject:
   - component: {fileID: 516592262}
   - component: {fileID: 516592261}
   - component: {fileID: 516592260}
+  - component: {fileID: 516592265}
   m_Layer: 0
   m_Name: pin (4)
   m_TagString: LockPickingPin
@@ -563,7 +583,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AlarmPin: 0
-  OnHit:
+  hasBeenHit: 0
+  maxHeight: 1
+  OnHitUpdate:
     m_PersistentCalls:
       m_Calls: []
 --- !u!65 &516592261
@@ -574,7 +596,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 516592259}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -642,6 +664,22 @@ Transform:
   m_Father: {fileID: 920842305}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &516592265
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 516592259}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &835947865
 GameObject:
   m_ObjectHideFlags: 0
@@ -655,6 +693,7 @@ GameObject:
   - component: {fileID: 835947868}
   - component: {fileID: 835947867}
   - component: {fileID: 835947866}
+  - component: {fileID: 835947871}
   m_Layer: 0
   m_Name: pin (1)
   m_TagString: LockPickingPin
@@ -675,7 +714,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AlarmPin: 0
-  OnHit:
+  hasBeenHit: 0
+  maxHeight: 1
+  OnHitUpdate:
     m_PersistentCalls:
       m_Calls: []
 --- !u!65 &835947867
@@ -686,7 +727,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 835947865}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -754,6 +795,22 @@ Transform:
   m_Father: {fileID: 920842305}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &835947871
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 835947865}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &854547846
 GameObject:
   m_ObjectHideFlags: 0
@@ -831,6 +888,8 @@ MonoBehaviour:
   - {fileID: 1879355385}
   - {fileID: 516592260}
   percentChanceAlarmPin: 0.2
+  rounds: 3
+  debugColor: 1
 --- !u!4 &920842305
 Transform:
   m_ObjectHideFlags: 0
@@ -1035,6 +1094,7 @@ GameObject:
   - component: {fileID: 1564658551}
   - component: {fileID: 1564658550}
   - component: {fileID: 1564658549}
+  - component: {fileID: 1564658554}
   m_Layer: 0
   m_Name: pin
   m_TagString: LockPickingPin
@@ -1055,7 +1115,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AlarmPin: 0
-  OnHit:
+  hasBeenHit: 0
+  maxHeight: 1
+  OnHitUpdate:
     m_PersistentCalls:
       m_Calls: []
 --- !u!65 &1564658550
@@ -1066,7 +1128,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1564658548}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -1134,6 +1196,22 @@ Transform:
   m_Father: {fileID: 920842305}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1564658554
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1564658548}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1617749069
 GameObject:
   m_ObjectHideFlags: 0
@@ -1243,6 +1321,7 @@ GameObject:
   - component: {fileID: 1879355387}
   - component: {fileID: 1879355386}
   - component: {fileID: 1879355385}
+  - component: {fileID: 1879355390}
   m_Layer: 0
   m_Name: pin (3)
   m_TagString: LockPickingPin
@@ -1263,7 +1342,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AlarmPin: 0
-  OnHit:
+  hasBeenHit: 0
+  maxHeight: 1
+  OnHitUpdate:
     m_PersistentCalls:
       m_Calls: []
 --- !u!65 &1879355386
@@ -1274,7 +1355,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1879355384}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -1342,6 +1423,22 @@ Transform:
   m_Father: {fileID: 920842305}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1879355390
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1879355384}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1919105137
 GameObject:
   m_ObjectHideFlags: 0

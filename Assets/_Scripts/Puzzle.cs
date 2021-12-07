@@ -4,6 +4,7 @@ using UnityEngine.Events;
 public class Puzzle : MonoBehaviour
 {
     public bool Completed { get; protected set; }
+    public bool Failed { get; protected set; }
     public UnityEvent OnCompleted = new UnityEvent();
     public UnityEvent OnFailed = new UnityEvent();
 
@@ -19,6 +20,7 @@ public class Puzzle : MonoBehaviour
     protected virtual void Fail()
     {
         OnFailed.Invoke();
+        Failed = true;
     }
 
     /// <summary>
@@ -27,5 +29,6 @@ public class Puzzle : MonoBehaviour
     protected virtual void Reset()
     {
         Completed = false;
+        Failed = false;
     }
 }

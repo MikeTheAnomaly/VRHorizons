@@ -3,21 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent(typeof(Rigidbody))]
 public class LockPin : MonoBehaviour
 {
     public bool AlarmPin = false;
 
-    private bool hasBeenHit = false;
+    public bool hasBeenHit = false;
 
-    public UnityEvent OnHit = new UnityEvent();
+    private Rigidbody rb;
+    private float minHeight;
+    public float maxHeight;
 
-    public void HitPin()
+    public float NormalizedPinHeight { get { return (transform.position.y - minHeight) / (maxHeight - minHeight); } }
+
+    public UnityEvent<float> OnHitUpdate = new UnityEvent<float>();
+    private void Start()
     {
-        if (!hasBeenHit)
-        {
-            OnHit.Invoke();
-            hasBeenHit = true;
-        }
+        minHeight = transform.position.y;
+        maxHeight += transform.position.y;
+
+        rb = this.GetComponent<Rigidbody>();
+        rb.useGravity = false;
+        rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezeRotation;
+    }
+
+    private void LateUpdate()
+    {
+        //constrain the position of the peg on the axis
+        transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, minHeight, maxHeight), transform.position.z);
+    }
+
+    public void HitPinUpdate()
+    {
+            OnHitUpdate.Invoke(NormalizedPinHeight);
     }
 
     public void Reset()

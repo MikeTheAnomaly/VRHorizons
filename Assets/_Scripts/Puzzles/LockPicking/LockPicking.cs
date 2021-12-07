@@ -7,40 +7,61 @@ public class LockPicking : Puzzle
     public LockPin[] Pins;
     public float percentChanceAlarmPin = .2f;
 
-    private int goodPinAmount;
-    private int currentCorrect = 0;
+    private uint goodPinAmount;
+    private uint currentCorrect = 0;
+    private uint alarmPinAmount = 0;
+
+    public uint rounds = 3;
+    private uint curRound = 1;
+
+    public bool debugColor = false;
 
     private void Start()
     {
-        foreach (var pin in Pins)
+        //add alram or win status for pin
+        foreach (var p in Pins)
         {
-            SetAlarmPinRandom(pin);
-
-            if (!pin.AlarmPin)
+            p.OnHitUpdate.AddListener(normal =>
             {
-                pin.OnHit.AddListener(() =>
+                Debug.LogError(normal + " " + (((float)curRound / rounds) - .2f));
+                if (!base.Failed)
                 {
-                    HitPin(pin);
-                });
-                goodPinAmount++;
-            }
-            else
-            {
-                pin.OnHit.AddListener(() =>
-                {
-                    if (!Completed)
+                    if (!p.AlarmPin)
                     {
-                        base.Fail();
-                    }
-                });
+                        if (!p.hasBeenHit && normal <= (float)curRound / rounds && normal >= ((float)curRound / rounds) - .2f)
+                        {
 
-            }
+                            p.hasBeenHit = true;
+                            HitPin(p);
+                        }
+                    }
+                    else
+                    {
+                        if (!Completed && (normal + .1) > (float)curRound / rounds)
+                        {
+                            base.Fail();
+                            if (debugColor)
+                            {
+                                p.gameObject.GetComponent<Renderer>().material = new Material(p.gameObject.GetComponent<Renderer>().material);
+                                p.gameObject.GetComponent<Renderer>().material.color = Color.red;
+                            }
+                        }
+                    }
+                }
+            });
         }
+        UpdatePinStatus();
     }
 
     public void HitPin(LockPin pin)
     {
         currentCorrect++;
+        pin.AlarmPin = true;
+        if (debugColor)
+        {
+            pin.gameObject.GetComponent<Renderer>().material = new Material(pin.gameObject.GetComponent<Renderer>().material);
+            pin.gameObject.GetComponent<Renderer>().material.color = Color.green;
+        }
         CheckStatus();
     }
 
@@ -48,7 +69,16 @@ public class LockPicking : Puzzle
     {
         if(currentCorrect == goodPinAmount)
         {
-            Complete();
+            curRound++;
+            if(curRound - 1  == rounds)
+            {
+                Complete();
+            }
+            else
+            {
+                UpdatePinStatus();
+            }
+            
         }
     }
 
@@ -61,8 +91,48 @@ public class LockPicking : Puzzle
         }
     }
 
-    private void SetAlarmPinRandom(LockPin pin)
+    /// <summary>
+    /// Takes a pin and randomly selects if it is a alarm pin or not
+    /// </summary>
+    /// <param name="pin"></param>
+    /// <returns>True if it is a alarm pin</returns>
+    private bool SetAlarmPinRandom(LockPin pin)
     {
-        pin.AlarmPin = Random.Range(0f, 1f) <= percentChanceAlarmPin;
+        pin.AlarmPin = Random.Range(0f, 1f) <= percentChanceAlarmPin && (alarmPinAmount + 1) < Pins.Length;
+        return pin.AlarmPin;
+    }
+
+    /// <summary>
+    /// Gives new random values for the round of pins
+    /// </summary>
+    private void UpdatePinStatus()
+    {
+        currentCorrect = 0;
+        goodPinAmount = 0;
+        alarmPinAmount = 0;
+        foreach (var pin in Pins)
+        {
+            pin.Reset();
+            
+            if (!SetAlarmPinRandom(pin)) 
+            { 
+                goodPinAmount++;
+                if (debugColor)
+                {
+                    pin.gameObject.GetComponent<Renderer>().material = new Material(pin.gameObject.GetComponent<Renderer>().material);
+                    pin.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
+                }
+            }
+            else
+            {
+                alarmPinAmount++;
+                if (debugColor)
+                {
+                    pin.gameObject.GetComponent<Renderer>().material = new Material(pin.gameObject.GetComponent<Renderer>().material);
+                    pin.gameObject.GetComponent<Renderer>().material.color = Color.red;
+                }
+            }
+
+        }
     }
 }
