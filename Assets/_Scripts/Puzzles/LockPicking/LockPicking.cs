@@ -23,7 +23,7 @@ public class LockPicking : Puzzle
         {
             p.OnHitUpdate.AddListener(normal =>
             {
-                Debug.LogError(normal + " " + (((float)curRound / rounds) - .2f));
+                //Debug.LogError(normal + " " + (((float)curRound / rounds) - .2f));
                 if (!base.Failed)
                 {
                     if (!p.AlarmPin)
