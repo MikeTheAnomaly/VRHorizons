@@ -16,6 +16,12 @@ public class LockPicking : Puzzle
 
     public bool debugColor = false;
 
+    public GameObject pick;
+
+    private void Update()
+    {
+        Debug.LogError(GetNormalizedPickPos());
+    }
     private void Start()
     {
         //add alram or win status for pin
@@ -134,5 +140,16 @@ public class LockPicking : Puzzle
             }
 
         }
+    }
+    /// <summary>
+    /// Gets the normlized position of the pick
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 GetNormalizedPickPos()
+    {
+        //convert the pick to the local space of the picks so math stays right
+        Vector3 pickLocalSpace = transform.InverseTransformPoint(pick.transform.position);
+        float xSpace = Mathf.Clamp(pickLocalSpace.x, Pins[0].transform.localPosition.x, Pins[Pins.Length - 1].transform.localPosition.x);
+        return new Vector3(xSpace.Normalize(Pins[0].transform.localPosition.x, Pins[Pins.Length - 1].transform.localPosition.x), 0, 0);
     }
 }
