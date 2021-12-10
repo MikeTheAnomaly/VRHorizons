@@ -11,4 +11,9 @@ public class Pick : MonoBehaviour
             other.gameObject.GetComponent<LockPin>().HitPinUpdate();
         }
     }
+
+    private void LateUpdate()
+    {
+        
+    }
 }

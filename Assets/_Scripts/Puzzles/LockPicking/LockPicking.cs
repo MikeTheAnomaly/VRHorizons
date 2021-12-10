@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 
 public class LockPicking : Puzzle
 {
@@ -17,10 +18,11 @@ public class LockPicking : Puzzle
     public bool debugColor = false;
 
     public GameObject pick;
+    
 
-    private void Update()
+    private void LateUpdate()
     {
-        Debug.LogError(GetNormalizedPickPos());
+        WSServer.SendToAllClients(GetJson());
     }
     private void Start()
     {
@@ -150,6 +152,56 @@ public class LockPicking : Puzzle
         //convert the pick to the local space of the picks so math stays right
         Vector3 pickLocalSpace = transform.InverseTransformPoint(pick.transform.position);
         float xSpace = Mathf.Clamp(pickLocalSpace.x, Pins[0].transform.localPosition.x, Pins[Pins.Length - 1].transform.localPosition.x);
-        return new Vector3(xSpace.Normalize(Pins[0].transform.localPosition.x, Pins[Pins.Length - 1].transform.localPosition.x), 0, 0);
+        float ySpace = Mathf.Clamp(pick.transform.position.y, Pins[0].minHeight - 1, Pins[0].maxHeight);
+        return new Vector3(xSpace.Normalize(Pins[0].transform.localPosition.x, Pins[Pins.Length - 1].transform.localPosition.x), ySpace.Normalize(Pins[0].minHeight - 1, Pins[0].maxHeight), 0);
+    }
+
+    public string GetJson()
+    {
+        PinSerilized[] pinSerilizeds = new PinSerilized[Pins.Length];
+        for (int i = 0; i < Pins.Length; i++)
+        {
+            LockPin pin = Pins[i];
+            pinSerilizeds[i] = new PinSerilized
+            {
+                NormalY = pin.NormalizedPinHeight,
+                AlarmPin = pin.AlarmPin,
+                Set = pin.hasBeenHit
+            };
+        }
+
+        LockPickingSerialized lockPickingSerialized = new LockPickingSerialized
+        {
+            Pins = pinSerilizeds,
+            Pick = new PickSerilized
+            {
+                NormalX = GetNormalizedPickPos().x,
+                NormalY = GetNormalizedPickPos().y,
+                RotZ = pick.transform.rotation.eulerAngles.z
+            }
+        };
+
+        return JsonConvert.SerializeObject(lockPickingSerialized);
+    }
+
+    public class LockPickingSerialized
+    {
+        public PinSerilized[] Pins { get; set; }
+        public PickSerilized Pick { get; set; }
+    }
+
+    public class PickSerilized
+    {
+        public float NormalX { get; set; }
+        public float NormalY { get; set; }
+        public float RotZ { get; set; }
+
+    }
+
+    public class PinSerilized
+    {
+        public float NormalY { get; set; }
+        public bool AlarmPin { get; set; }
+        public bool Set { get; set; }
     }
 }

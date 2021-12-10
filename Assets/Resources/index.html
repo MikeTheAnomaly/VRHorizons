@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+.rectangle {
+  height: 50px;
+  width: 10px;
+  background-color: #555;
+  margin-left: 16px;
+  position: absolute;
+}
+.circle {
+  height: 25px;
+  width: 500px;
+  margin-left: -500px;
+  margin-top: 25px;
+  background-color: rgb(168, 13, 13);
+}
+.pin{
+  height: 50px;
+  width: 25px;
+  background-color: #555;
+  float: left;
+  margin-left: 10px;
+}
+</style>
+</head>
+<body>
+
+<div id="pins">
+    <div class="pin">0</div>
+    <div class="pin">1</div>
+    <div class="pin">2</div>
+    <div class="pin">3</div>
+    <div class="pin">4</div>
+</div>
+<div class="rectangle" id="rec">
+    <div class="circle"></div>
+</div>
+
+<script>
+     var rect = document.getElementById("rec");
+     rect.style.transform = 'rotateZ(0deg) translateX(' + 0 + 'px) translateY(100px)';
+
+     let pins = document.getElementById("pins").children;
+
+     var pin0 = pins[1];
+     pin0.style.transform = 'rotateZ(0deg) translateY(' + 0 + 'px)';
+
+    let pinHeight = 50;
+    let totalWidth = 145;
+    let totalHeight = 90;
+
+
+    let socket = new WebSocket("ws://127.0.0.1:8080");
+    socket.onmessage = ((message) => {
+      console.log("Message: " + message.data);
+      var game = JSON.parse(message.data);
+      for(var i = 0; i < game.Pins.length; i++){
+        SetPinLocation(i,game.Pins[i].NormalY * -pinHeight);
+        if(game.Pins[i].Set){
+          pins[i].style.background = "green"
+        }else if(game.Pins[i].AlarmPin){
+          pins[i].style.background = "red"
+        }else{
+          pins[i].style.background = "yellow"
+        }
+      }
+
+      SetPickLocation(game.Pick.NormalX * totalWidth, (1 - game.Pick.NormalY) * totalHeight, game.Pick.RotZ);
+    });
+
+    function SetPinLocation(pinNum, y){
+      pins[pinNum].style.transform = 'translateY(' + y + 'px)';
+    }
+
+    function SetPickLocation(x,y,rotZ){
+      rect.style.transform = 'rotateZ('+rotZ+'deg) translateX(' + x + 'px) translateY('+y+'px)';
+    }
+
+</script>
+</body>
+</html> 

@@ -11,7 +11,7 @@ public class LockPin : MonoBehaviour
     public bool hasBeenHit = false;
 
     private Rigidbody rb;
-    private float minHeight;
+    public float minHeight { get; private set; }
     public float maxHeight;
 
     public float NormalizedPinHeight { get { return (transform.position.y - minHeight) / (maxHeight - minHeight); } }
