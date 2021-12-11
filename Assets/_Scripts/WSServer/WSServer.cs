@@ -30,9 +30,12 @@ public class WSServer : MonoBehaviour
 
     public static void SendToAllClients(string message)
     {
-        foreach(IWebSocketConnection connection in wSServer.connections)
+        if (wSServer.connections != null)
         {
-            connection.Send(message);
+            foreach (IWebSocketConnection connection in wSServer.connections)
+            {
+                connection.Send(message);
+            }
         }
     }
 
