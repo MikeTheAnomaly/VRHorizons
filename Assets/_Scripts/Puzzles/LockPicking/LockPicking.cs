@@ -18,6 +18,9 @@ public class LockPicking : Puzzle
     public bool debugColor = false;
 
     public GameObject pick;
+    public float yBotOffset = .1f;
+
+    public float failTollerance = .2f;
     
 
     private void LateUpdate()
@@ -45,7 +48,7 @@ public class LockPicking : Puzzle
                     }
                     else
                     {
-                        if (!Completed && (normal + .1) > (float)curRound / rounds)
+                        if (!Completed && (normal - failTollerance) > (float)curRound / rounds)
                         {
                             base.Fail();
                             if (debugColor)
@@ -152,8 +155,8 @@ public class LockPicking : Puzzle
         //convert the pick to the local space of the picks so math stays right
         Vector3 pickLocalSpace = transform.InverseTransformPoint(pick.transform.position);
         float xSpace = Mathf.Clamp(pickLocalSpace.x, Pins[0].transform.localPosition.x, Pins[Pins.Length - 1].transform.localPosition.x);
-        float ySpace = Mathf.Clamp(pick.transform.position.y, Pins[0].minHeight - 1, Pins[0].maxHeight);
-        return new Vector3(xSpace.Normalize(Pins[0].transform.localPosition.x, Pins[Pins.Length - 1].transform.localPosition.x), ySpace.Normalize(Pins[0].minHeight - 1, Pins[0].maxHeight), 0);
+        float ySpace = Mathf.Clamp(pick.transform.position.y, Pins[0].minHeight - yBotOffset, Pins[0].maxHeight);
+        return new Vector3(xSpace.Normalize(Pins[0].transform.localPosition.x, Pins[Pins.Length - 1].transform.localPosition.x), ySpace.Normalize(Pins[0].minHeight - yBotOffset, Pins[0].maxHeight), 0);
     }
 
     public string GetJson()
