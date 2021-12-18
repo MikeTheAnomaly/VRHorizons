@@ -21,7 +21,8 @@ public class LockPicking : Puzzle
     public float yBotOffset = .1f;
 
     public float failTollerance = .2f;
-    
+
+    private Vector3 pickStartPos;
 
     private void LateUpdate()
     {
@@ -29,6 +30,7 @@ public class LockPicking : Puzzle
     }
     private void Start()
     {
+        pickStartPos = pick.transform.position;
         //add alram or win status for pin
         foreach (var p in Pins)
         {
@@ -99,7 +101,10 @@ public class LockPicking : Puzzle
         foreach (var pin in Pins)
         {
             pin.Reset();
+            pin.ResetPos();
         }
+        UpdatePinStatus();
+        //pick.transform.position = pickStartPos;
     }
 
     /// <summary>

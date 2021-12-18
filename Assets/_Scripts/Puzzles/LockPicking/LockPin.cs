@@ -17,6 +17,7 @@ public class LockPin : MonoBehaviour
     public float NormalizedPinHeight { get { return (transform.position.y - minHeight) / (maxHeight - minHeight); } }
 
     public UnityEvent<float> OnHitUpdate = new UnityEvent<float>();
+
     private void Start()
     {
         minHeight = transform.position.y;
@@ -41,6 +42,11 @@ public class LockPin : MonoBehaviour
     public void Reset()
     {
         hasBeenHit = false;
+    }
+
+    public void ResetPos()
+    {
+        transform.position = new Vector3(transform.position.x, minHeight, transform.position.z);
     }
 
 }

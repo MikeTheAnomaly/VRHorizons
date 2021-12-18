@@ -16,6 +16,7 @@ public class WSServer : MonoBehaviour
         {
             return;
         }
+        DontDestroyOnLoad(this);
         wSServer = this;
 
         //https://github.com/statianzo/Fleck

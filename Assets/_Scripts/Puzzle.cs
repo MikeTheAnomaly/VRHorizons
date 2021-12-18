@@ -21,6 +21,7 @@ public class Puzzle : MonoBehaviour
     {
         OnFailed.Invoke();
         Failed = true;
+        Reset();
     }
 
     /// <summary>

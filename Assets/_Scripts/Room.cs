@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class Room : MonoBehaviour
 {
@@ -32,6 +34,14 @@ public class Room : MonoBehaviour
                 ActivateTrap();
             });
         }
+
+        foreach (Trap trap in Traps)
+        {
+            trap.OnFailed.AddListener(() =>
+            {
+                ActivateTrap();
+            });
+        }
     }
 
     /// <summary>
@@ -43,13 +53,14 @@ public class Room : MonoBehaviour
         if (curTrap < Traps.Length)
         {
             Traps[curTrap].Activate();
+
+            OnTrapActivate.Invoke();
         }
         else
         {
             RoomFailed();
         }
 
-        OnTrapActivate.Invoke();
 
     }
 
@@ -78,6 +89,17 @@ public class Room : MonoBehaviour
         {
             RoomPassed();
         }
+    }
+
+    public void ResetScene()
+    {
+        StartCoroutine(ResetScene5Sec());
+    }
+
+    IEnumerator ResetScene5Sec()
+    {
+        yield return new WaitForSeconds(5);
+        SceneManager.LoadScene(0); 
     }
 
 }
