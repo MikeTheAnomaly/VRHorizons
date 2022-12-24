@@ -32,4 +32,6 @@ public class Puzzle : MonoBehaviour
         Completed = false;
         Failed = false;
     }
+
+    
 }

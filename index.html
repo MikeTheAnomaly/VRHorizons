@@ -38,6 +38,10 @@
 <div class="rectangle" id="rec">
     <div class="circle"></div>
 </div>
+<div>
+  <input type="text" id="inputText">
+<button onclick="connect()">Connect</button>
+</div>
 
 <script>
      var rect = document.getElementById("rec");
@@ -53,9 +57,22 @@
     let totalHeight = 90;
 
 
-    let socket = new WebSocket("ws://127.0.0.1:8080");
+    
+
+    function SetPinLocation(pinNum, y){
+      pins[pinNum].style.transform = 'translateY(' + y + 'px)';
+    }
+
+    function SetPickLocation(x,y,rotZ){
+      rect.style.transform = 'rotateZ('+rotZ+'deg) translateX(' + x + 'px) translateY('+y+'px)';
+    }
+
+    function connect() {
+  // Get the text from the input element
+  var inputText = document.getElementById("inputText").value;
+  let socket = new WebSocket("ws://"+inputText+":9515");
     socket.onmessage = ((message) => {
-      console.log("Message: " + message.data);
+      console.log("Message: " + message.data.toString());
       var game = JSON.parse(message.data);
       for(var i = 0; i < game.Pins.length; i++){
         SetPinLocation(i,game.Pins[i].NormalY * -pinHeight);
@@ -70,14 +87,11 @@
 
       SetPickLocation(game.Pick.NormalX * totalWidth, (1 - game.Pick.NormalY) * totalHeight, 0);
     });
-
-    function SetPinLocation(pinNum, y){
-      pins[pinNum].style.transform = 'translateY(' + y + 'px)';
-    }
-
-    function SetPickLocation(x,y,rotZ){
-      rect.style.transform = 'rotateZ('+rotZ+'deg) translateX(' + x + 'px) translateY('+y+'px)';
-    }
+    socket.onopen = ((e)=>{
+      
+    socket.send("hello");
+    })
+}
 
 </script>
 </body>

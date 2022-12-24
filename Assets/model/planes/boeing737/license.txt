@@ -1,0 +1,11 @@
+Model Information:
+* title:	Boeing737
+* source:	https://sketchfab.com/3d-models/boeing737-259de41be0c7410e86b7e79be33d6b3a
+* author:	manilov.ap (https://sketchfab.com/manilov.ap)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Boeing737" (https://sketchfab.com/3d-models/boeing737-259de41be0c7410e86b7e79be33d6b3a) by manilov.ap (https://sketchfab.com/manilov.ap) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
