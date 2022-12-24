@@ -22,12 +22,15 @@ public class WSServer : MonoBehaviour
 
     private static ClientWebSocket ws;
 
+    static Queue<string> log = new Queue<string>();
+
     public static async Task ConnectAsync(Uri uri)
     {
         string connection = await FindServersAsync();
         if(connection != null)
         {
-            uri = new Uri("found open connection " + connection);
+            log.Enqueue("found " + connection);
+            uri = new Uri(connection);
         }
         ws = new ClientWebSocket();
         await ws.ConnectAsync(uri, CancellationToken.None);
@@ -48,9 +51,7 @@ public class WSServer : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
-        
-
+    { 
         IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
         IPAddress ipAddress = ipHostInfo.AddressList.LastOrDefault
             (a => a.AddressFamily == AddressFamily.InterNetwork);
@@ -60,8 +61,8 @@ public class WSServer : MonoBehaviour
         {
             return;
         }
-        DontDestroyOnLoad(this);
         wSServer = this;
+        DontDestroyOnLoad(this);
 
         ConnectAsync( new Uri("ws://127.0.0.1:9515"));
         /*ws = new WebSocketSharp.WebSocket("ws://127.0.0.1:7638");
@@ -101,9 +102,14 @@ public class WSServer : MonoBehaviour
         });*/
     }
 
-    void somthing()
+    private void LateUpdate()
     {
-
+        if(log.Count > 0)
+        {
+            string s = log.Dequeue();
+            Debug.Log(s);
+            ipText.text = s;
+        }
     }
     public static void SendToAllClients(string message)
     {
@@ -132,36 +138,28 @@ public class WSServer : MonoBehaviour
                 // Skip the local IP address
                 //continue;
             }
+            testIP = "ws://" + testIP + ":9515";
 
             // Try to connect to a WebSocket server at this IP address
             try
             {
-                using (var client = new TcpClient())
+                using (var ws = new ClientWebSocket())
                 {
-                    await client.ConnectAsync(testIP, 9515);
-                    using (var stream = client.GetStream())
+                    try
                     {
-                        // Send a WebSocket handshake request
-                        string request = "GET / HTTP/1.1\r\n" +
-                                        "Host: " + testIP + "\r\n" +
-                                        "Upgrade: websocket\r\n" +
-                                        "Connection: Upgrade\r\n" +
-                                        "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\n" +
-                                        "Sec-WebSocket-Version: 13\r\n\r\n";
-                        byte[] requestBytes = Encoding.UTF8.GetBytes(request);
-                        await stream.WriteAsync(requestBytes, 0, requestBytes.Length);
-
-                        // Read the response
-                        byte[] responseBytes = new byte[1024];
-                        int responseLength = await stream.ReadAsync(responseBytes, 0, responseBytes.Length);
-                        string response = Encoding.UTF8.GetString(responseBytes, 0, responseLength);
-
-                        // Check if the response is a WebSocket handshake response
-                        if (response.StartsWith("HTTP/1.1 101 Switching Protocols"))
-                        {
-                            Console.WriteLine("WebSocket server found at " + testIP);
-                            return testIP;
-                        }
+                        log.Enqueue("trying" + testIP.ToString());
+                        var cts = new CancellationTokenSource();
+                        var timer = new Timer(_ => cts.Cancel(), null, 600, Timeout.Infinite);
+                        await ws.ConnectAsync(new Uri(testIP), cts.Token);
+                        log.Enqueue("Connected to WebSocket server at " + new Uri(testIP));
+                        return testIP;
+                    }
+                    catch (System.Net.WebSockets.WebSocketException ex)
+                    {
+                        log.Enqueue("Error connecting to WebSocket server: " + ex.Message);
+                    }catch (Exception ex)
+                    {
+                        log.Enqueue("Error connecting to WebSocket server: " + ex.Message);
                     }
                 }
             }
@@ -177,15 +175,9 @@ public class WSServer : MonoBehaviour
 
     private static string GetLocalIPAddress()
     {
-        // Find the local IP address
-        var host = Dns.GetHostEntry(Dns.GetHostName());
-        foreach (var ip in host.AddressList)
-        {
-            if (ip.AddressFamily == AddressFamily.InterNetwork)
-            {
-                return ip.ToString();
-            }
-        }
-        throw new Exception("Local IP Address Not Found!");
+        IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+        IPAddress ipAddress = ipHostInfo.AddressList.LastOrDefault
+            (a => a.AddressFamily == AddressFamily.InterNetwork);
+        return ipAddress.ToString();
     }
 }

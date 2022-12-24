@@ -70,6 +70,15 @@ public class Room : MonoBehaviour
     private void RoomPassed()
     {
         OnRoomPassed.Invoke();
+        //todo remove this
+        StartCoroutine(EndGame());
+
+    }
+
+    IEnumerator EndGame()
+    {
+        yield return new WaitForSeconds(15);
+        SceneManager.LoadScene(0);
     }
 
     /// <summary>

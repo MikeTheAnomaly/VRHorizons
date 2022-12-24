@@ -1,7 +1,7 @@
 const WebSocket = require('ws');
 const os = require('os');
 const server = new WebSocket.Server({
-    host: "127.0.0.1",
+    host: "192.168.0.16",
   port: 9515
 });
 console.log(server.address());

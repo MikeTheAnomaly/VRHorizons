@@ -1,98 +1,182 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-.rectangle {
-  height: 50px;
-  width: 10px;
-  background-color: #555;
-  margin-left: 16px;
-  position: absolute;
-}
-.circle {
-  height: 25px;
-  width: 500px;
-  margin-left: -500px;
-  margin-top: 25px;
-  background-color: rgb(168, 13, 13);
-}
-.pin{
-  height: 50px;
-  width: 25px;
-  background-color: #555;
-  float: left;
-  margin-left: 10px;
-}
-</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    .rectangle {
+      height: 50px;
+      width: 10px;
+      background-color: #555;
+      margin-left: 16px;
+      position: absolute;
+    }
+
+    .circle {
+      height: 25px;
+      width: 500px;
+      margin-left: -500px;
+      margin-top: 25px;
+      background-color: rgb(168, 13, 13);
+    }
+
+    .pin {
+      height: 50px;
+      width: 25px;
+      background-color: #555;
+      float: left;
+      margin-left: 10px;
+    }
+  </style>
 </head>
+
 <body>
+  <div id="lockPicking" style="display: hidden;">
+    <div id="pins">
+      <div class="pin">0</div>
+      <div class="pin">1</div>
+      <div class="pin">2</div>
+      <div class="pin">3</div>
+      <div class="pin">4</div>
+    </div>
+    <div class="rectangle" id="rec">
+      <div class="circle"></div>
+    </div>
+  </div>
+  <br>
+  <div>
+    <input type="text" id="inputText">
+    <button onclick="connect()">Connect</button>
+  </div>
 
-<div id="pins">
-    <div class="pin">0</div>
-    <div class="pin">1</div>
-    <div class="pin">2</div>
-    <div class="pin">3</div>
-    <div class="pin">4</div>
-</div>
-<div class="rectangle" id="rec">
-    <div class="circle"></div>
-</div>
-<div>
-  <input type="text" id="inputText">
-<button onclick="connect()">Connect</button>
-</div>
+  <canvas id="planesCanvas" ></canvas>
 
-<script>
-     var rect = document.getElementById("rec");
-     rect.style.transform = 'rotateZ(0deg) translateX(' + 0 + 'px) translateY(100px)';
+  <script>
+    var canvas = document.getElementById("planesCanvas");
+    var ctx = canvas.getContext("2d");
+    canvas.width = 550;
+    canvas.height = 550;
+    var x = 0;
+    var y = 0;
+    var width = 500;
+    var height = 500;
 
-     let pins = document.getElementById("pins").children;
+    ctx.fillRect(x, y, 600, 600);
 
-     var pin0 = pins[1];
-     pin0.style.transform = 'rotateZ(0deg) translateY(' + 0 + 'px)';
+    var locations = [[50, 50], [100, 100], [499, 120]];
+
+    for (var i = 0; i < locations.length; i++) {
+      var x = locations[i][0];
+      var y = locations[i][1];
+      var width = 10;
+      var height = 10;
+
+      ctx.fillStyle = "red";
+      ctx.fillRect(x, y, width, height);
+    }
+
+
+
+    var lockp = document.getElementById("lockPicking");
+    var rect = document.getElementById("rec");
+    rect.style.transform = 'rotateZ(0deg) translateX(' + 0 + 'px) translateY(100px)';
+
+    let pins = document.getElementById("pins").children;
+
+    var pin0 = pins[1];
+    pin0.style.transform = 'rotateZ(0deg) translateY(' + 0 + 'px)';
 
     let pinHeight = 50;
     let totalWidth = 145;
     let totalHeight = 90;
 
 
-    
 
-    function SetPinLocation(pinNum, y){
+
+    function SetPinLocation(pinNum, y) {
       pins[pinNum].style.transform = 'translateY(' + y + 'px)';
     }
 
-    function SetPickLocation(x,y,rotZ){
-      rect.style.transform = 'rotateZ('+rotZ+'deg) translateX(' + x + 'px) translateY('+y+'px)';
+    function SetPickLocation(x, y, rotZ) {
+      rect.style.transform = 'rotateZ(' + rotZ + 'deg) translateX(' + x + 'px) translateY(' + y + 'px)';
     }
 
     function connect() {
-  // Get the text from the input element
-  var inputText = document.getElementById("inputText").value;
-  let socket = new WebSocket("ws://"+inputText+":9515");
-    socket.onmessage = ((message) => {
-      console.log("Message: " + message.data.toString());
-      var game = JSON.parse(message.data);
-      for(var i = 0; i < game.Pins.length; i++){
-        SetPinLocation(i,game.Pins[i].NormalY * -pinHeight);
-        if(game.Pins[i].Set){
-          pins[i].style.background = "green"
-        }else if(game.Pins[i].AlarmPin){
-          pins[i].style.background = "red"
-        }else{
-          pins[i].style.background = "yellow"
+      // Get the text from the input element
+      var inputText = document.getElementById("inputText").value;
+      let socket = new WebSocket("ws://" + inputText + ":9515");
+      socket.onmessage = ((message) => {
+        console.log("Message: " + message.data.toString());
+
+        try {
+          var game = JSON.parse(message.data);
+          lockp.style.visibility = "visible";
+          for (var i = 0; i < game.Pins.length; i++) {
+            SetPinLocation(i, game.Pins[i].NormalY * -pinHeight);
+            if (game.Pins[i].Set) {
+              pins[i].style.background = "green"
+            } else if (game.Pins[i].AlarmPin) {
+              pins[i].style.background = "red"
+            } else {
+              pins[i].style.background = "yellow"
+            }
+          }
+
+          SetPickLocation(game.Pick.NormalX * totalWidth, (1 - game.Pick.NormalY) * totalHeight, 0);
+        } catch (e) {
+
+          lockp.style.visibility = "hidden";
+          console.log("not a lock")
+        }
+
+        try {
+          var game = JSON.parse(message.data);
+          drawSleigh(game);
+        } catch (e) {
+
+        }
+      });
+      socket.onopen = ((e) => {
+
+        socket.send("hello");
+      })
+    }
+
+    function drawSleigh(info) {
+      
+      ctx.clearRect(0, 0, 600, 600)
+      var x = 0;
+      var y = 0;
+      var width = 500;
+      var height = 500;
+
+      //background
+      ctx.fillStyle = "black";
+      ctx.fillRect(x, y, 600, 600);
+
+      //santa sleigh
+      ctx.fillStyle = "green";
+      ctx.fillRect(width * info.sleighPosNorm, 500, 50, 50);
+
+      var locations = [];
+      for(var i = 0; i < info.planes.length; i++){
+        if(info.planes[i].active){
+          locations.push([info.planes[i].posXNormal, info.planes[i].posZNormal])
         }
       }
 
-      SetPickLocation(game.Pick.NormalX * totalWidth, (1 - game.Pick.NormalY) * totalHeight, 0);
-    });
-    socket.onopen = ((e)=>{
-      
-    socket.send("hello");
-    })
-}
+      for (var i = 0; i < locations.length; i++) {
+        var x = locations[i][0] * 500;
+        var y = locations[i][1] * 500;
+        var width = 20;
+        var height = 20;
 
-</script>
+        ctx.fillStyle = "red";
+        ctx.fillRect(x, y, width, height);
+      }
+    }
+
+  </script>
 </body>
-</html> 
+
+</html>

@@ -10,13 +10,13 @@ public class PlaneGM : MonoBehaviour
     public MoveSleigh sleigh;
     [SerializeField]
     private int health = 6;
-    public int Health { get { return health; } set { if (this.health == value) return; OnHealthChange.Invoke(value); this.txtHealth.text = "Reindeer: " + value; this.health = value; } }
+    public int Health { get { return health; } set { if (this.health == value) return; OnHealthChange.Invoke(value); this.txtHealth.text = "Reindeer: " + value; this.health = value;} }
     public UnityEvent<int> OnHealthChange = new UnityEvent<int>();
     public TMP_Text txtHealth;
 
     public Vector2 SpawnAreaZ = new Vector2(-900, -400);
     public Vector2 MaxX = new Vector2(-50, 50);
-    public int poolAmount = 10;
+    public int poolAmount = 20;
     Queue<PlaneInstance> objectPool = new Queue<PlaneInstance>();
     List<PlaneInstance> planeInstances = new List<PlaneInstance>();
     public PlaneInstance plane;
@@ -67,7 +67,7 @@ public class PlaneGM : MonoBehaviour
         objectPool.Enqueue(plane);
         plane.gameObject.SetActive(false);
 
-        Debug.Log(JsonConvert.SerializeObject(GetJsonObject()));
+        //Debug.Log(JsonConvert.SerializeObject(GetJsonObject()));
     }
 
     public SleighGameJson GetJsonObject()
